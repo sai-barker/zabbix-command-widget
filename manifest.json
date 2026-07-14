@@ -11,16 +11,5 @@
         "widget.zabbix_command_widget.view": {
             "class": "WidgetView"
         }
-    },
-    "widget": {
-        "js_class": "WidgetZabbixCommandWidget"
-    },
-    "assets": {
-        "css": [
-            "widget.css"
-        ],
-        "js": [
-            "class.widget.js"
-        ]
     }
 }
