@@ -11,7 +11,8 @@ use Zabbix\Widgets\{
 
 use Zabbix\Widgets\Fields\{
 	CWidgetFieldMultiSelectHost,
-	CWidgetFieldSelect
+	CWidgetFieldSelect,
+	CWidgetFieldTextBox
 };
 
 class WidgetForm extends CWidgetForm {
@@ -53,6 +54,10 @@ class WidgetForm extends CWidgetForm {
 						CWidgetField::FLAG_NOT_EMPTY
 						| CWidgetField::FLAG_LABEL_ASTERISK
 					)
+			)
+			->addField(
+				(new CWidgetFieldTextBox('command_label', _('Button label')))
+					->setDefault(_('Execute'))
 			);
 	}
 }

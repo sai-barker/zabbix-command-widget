@@ -12,4 +12,7 @@
 	->addField(
 		new CWidgetFieldSelectView($data['fields']['command_scriptid'])
 	)
+	->addField(
+		new CWidgetFieldTextBoxView($data['fields']['command_label'])
+	)
 	->show();

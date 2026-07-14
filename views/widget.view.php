@@ -9,7 +9,7 @@
 	->addItem([
 		new CDiv('Host: '.$data['hostname']),
 		new CDiv('Script: '.$data['script_name']),
-		(new CButton('execute', _('Execute')))
+		(new CButton('execute', $data['button_label']))
 			->addClass('js-command-widget-execute')
 	])
 	->show();

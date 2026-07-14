@@ -11,6 +11,11 @@ class WidgetView extends CControllerDashboardWidgetView {
 	protected function doAction(): void {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
 		$scriptid = $this->fields_values['command_scriptid'] ?? null;
+		$button_label = trim($this->fields_values['command_label'] ?? '');
+
+		if ($button_label === '') {
+			$button_label = _('Execute');
+		}
 
 		$hostname = _('Unknown host');
 		$script_name = _('No script selected');
@@ -43,6 +48,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'hostname' => $hostname,
 			'scriptid' => $scriptid,
 			'script_name' => $script_name,
+			'button_label' => $button_label,
 			'user' => [
 				'debug_mode' => $this->getDebugMode()
 			]
