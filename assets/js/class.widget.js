@@ -16,8 +16,7 @@ class CWidgetZabbixCommandWidget extends CWidget {
 				return;
 			}
 
-			console.log('Execute button clicked');
-			alert('Execute button works!');
+			this.executeCommand(button);
 		};
 
 		this._target.addEventListener('click', this._on_click);
@@ -30,5 +29,63 @@ class CWidgetZabbixCommandWidget extends CWidget {
 		}
 
 		super.onDeactivate();
+	}
+
+	async executeCommand(button) {
+		const result_element =
+			this._target.querySelector('.js-command-widget-result');
+
+		button.disabled = true;
+		result_element.textContent = 'Executing...';
+
+		const url = new Curl('zabbix.php');
+		url.setArgument('action', 'zabbix_command_widget.execute');
+
+		const request = new URLSearchParams({
+			hostid: button.dataset.hostid,
+			scriptid: button.dataset.scriptid
+		});
+
+		try {
+			const response = await fetch(url.getUrl(), {
+				method: 'POST',
+				headers: {
+					'Content-Type':
+						'application/x-www-form-urlencoded; charset=UTF-8'
+				},
+				body: request.toString()
+			});
+
+			const response_text = await response.text();
+
+			let data;
+
+			try {
+				data = JSON.parse(response_text);
+			}
+			catch (error) {
+				throw new Error(
+					`Server returned a non-JSON response: ${response_text.slice(0, 200)}`
+				);
+			}
+
+			if (!response.ok || data.success !== true) {
+				throw new Error(
+					data.error || data.message || 'Script execution failed.'
+				);
+			}
+
+			result_element.textContent =
+				data.output !== ''
+					? `Success: ${data.output}`
+					: 'Success: Script executed.';
+		}
+		catch (error) {
+			console.error('Command Widget execution failed:', error);
+			result_element.textContent = `Failed: ${error.message}`;
+		}
+		finally {
+			button.disabled = false;
+		}
 	}
 }

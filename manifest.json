@@ -4,12 +4,16 @@
     "type": "widget",
     "name": "Zabbix Command Widget",
     "namespace": "ZabbixCommandWidget",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": "Sai Barker",
     "description": "Execute Zabbix Scripts directly from a dashboard widget.",
     "actions": {
         "widget.zabbix_command_widget.view": {
             "class": "WidgetView"
+        },
+        "zabbix_command_widget.execute": {
+            "class": "Execute",
+            "layout": "layout.json"
         }
     },
     "widget": {
