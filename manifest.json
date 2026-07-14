@@ -11,5 +11,13 @@
         "widget.zabbix_command_widget.view": {
             "class": "WidgetView"
         }
+    },
+    "widget": {
+        "js_class": "CWidgetZabbixCommandWidget"
+    },
+    "assets": {
+        "js": [
+            "class.widget.js"
+        ]
     }
 }
