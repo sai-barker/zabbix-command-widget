@@ -5,10 +5,11 @@
  * @var array $data
  */
 
-$form = new CWidgetFormView($data);
-
-$form
-    ->addField(
-        new CWidgetFieldMultiSelectHostView($data['fields']['hostid'])
-    )
-    ->show();
+(new CWidgetFormView($data))
+	->addField(
+		new CWidgetFieldMultiSelectHostView($data['fields']['hostid'])
+	)
+	->addField(
+		new CWidgetFieldSelectView($data['fields']['command_scriptid'])
+	)
+	->show();

@@ -1,26 +1,58 @@
-<?php declare(strict_types =0);
+<?php declare(strict_types = 0);
 
 namespace Modules\ZabbixCommandWidget\Includes;
 
+use API;
+
 use Zabbix\Widgets\{
-    CWidgetField,
-    CWidgetForm
+	CWidgetField,
+	CWidgetForm
 };
 
-use Zabbix\Widgets\Fields\CWidgetFieldMultiSelectHost;
+use Zabbix\Widgets\Fields\{
+	CWidgetFieldMultiSelectHost,
+	CWidgetFieldSelect
+};
 
 class WidgetForm extends CWidgetForm {
 
-    public function addFields(): self {
+	public function addFields(): self {
+		$scripts = API::Script()->get([
+			'output' => ['scriptid', 'name'],
+			'filter' => [
+				'scope' => 2
+			],
+			'sortfield' => 'name'
+		]);
 
-        return $this
-            ->addField(
-                (new CWidgetFieldMultiSelectHost('hostid', _('Host')))
-                    ->setFlags(
-                        CWidgetField::FLAG_NOT_EMPTY |
-                        CWidgetField::FLAG_LABEL_ASTERISK
-                    )
-                    ->setMultiple(false)
-            );
-    }
+		$script_options = [
+			0 => _('Select a script')
+		];
+
+		foreach ($scripts as $script) {
+			$script_options[(int) $script['scriptid']] = $script['name'];
+		}
+
+		return $this
+			->addField(
+				(new CWidgetFieldMultiSelectHost('hostid', _('Host')))
+					->setFlags(
+						CWidgetField::FLAG_NOT_EMPTY
+						| CWidgetField::FLAG_LABEL_ASTERISK
+					)
+					->setMultiple(false)
+			)
+			->addField(
+				(new CWidgetFieldSelect(
+					'command_scriptid',
+					_('Script'),
+					$script_options
+				))
+					->setDefault(0)
+					->setFlags(
+						CWidgetField::FLAG_NOT_EMPTY
+						| CWidgetField::FLAG_LABEL_ASTERISK
+					)
+			);
+	}
 }

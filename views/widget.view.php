@@ -6,8 +6,10 @@
  */
 
 (new CWidgetView($data))
-    ->addItem(
-        (new CButton('execute', 'Execute'))
-            ->addClass('js-command-widget-execute')
-    )
-    ->show();
+	->addItem([
+		new CDiv('Host: '.$data['hostname']),
+		new CDiv('Script: '.$data['script_name']),
+		(new CButton('execute', _('Execute')))
+			->addClass('js-command-widget-execute')
+	])
+	->show();
