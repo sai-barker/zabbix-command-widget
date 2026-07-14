@@ -32,6 +32,12 @@ class CWidgetZabbixCommandWidget extends CWidget {
 	}
 
 	async executeCommand(button) {
+		const confirmation = button.dataset.confirmation;
+
+		if (confirmation && !confirm(confirmation)) {
+			return;
+		}
+
 		const result_element =
 			this._target.querySelector('.js-command-widget-result');
 
@@ -47,7 +53,10 @@ class CWidgetZabbixCommandWidget extends CWidget {
 		});
 
 		if (button.dataset.manualinputEnabled === '1') {
-			request.set('manualinput', button.dataset.manualinput ?? '');
+			request.set(
+				'manualinput',
+				button.dataset.manualinput ?? ''
+			);
 		}
 
 		try {
@@ -75,7 +84,9 @@ class CWidgetZabbixCommandWidget extends CWidget {
 
 			if (!response.ok || data.success !== true) {
 				throw new Error(
-					data.error || data.message || 'Script execution failed.'
+					data.error
+					|| data.message
+					|| 'Script execution failed.'
 				);
 			}
 
@@ -85,8 +96,13 @@ class CWidgetZabbixCommandWidget extends CWidget {
 					: 'Success: Script executed.';
 		}
 		catch (error) {
-			console.error('Command Widget execution failed:', error);
-			result_element.textContent = `Failed: ${error.message}`;
+			console.error(
+				'Command Widget execution failed:',
+				error
+			);
+
+			result_element.textContent =
+				`Failed: ${error.message}`;
 		}
 		finally {
 			button.disabled = false;

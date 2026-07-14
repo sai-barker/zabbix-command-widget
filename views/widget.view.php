@@ -13,7 +13,8 @@ $button = (new CButton('execute', $data['button_label']))
 	->setAttribute(
 		'data-manualinput-enabled',
 		$data['manualinput_enabled'] ? '1' : '0'
-	);
+	)
+	->setAttribute('data-confirmation', $data['confirmation']);
 
 $result = (new CDiv())
 	->addClass('js-command-widget-result')

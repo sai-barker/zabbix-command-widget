@@ -21,6 +21,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 		$hostname = _('Unknown host');
 		$script_name = _('No script selected');
 		$manualinput_enabled = false;
+		$confirmation = '';
 
 		if ($hostid !== null) {
 			$hosts = API::Host()->get([
@@ -37,7 +38,8 @@ class WidgetView extends CControllerDashboardWidgetView {
 			$scripts = API::Script()->get([
 				'output' => [
 					'name',
-					'manualinput'
+					'manualinput',
+					'confirmation'
 				],
 				'scriptids' => [$scriptid]
 			]);
@@ -45,6 +47,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			if ($scripts) {
 				$script_name = $scripts[0]['name'];
 				$manualinput_enabled = (int) $scripts[0]['manualinput'] === 1;
+				$confirmation = $scripts[0]['confirmation'] ?? '';
 			}
 		}
 
@@ -57,6 +60,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'button_label' => $button_label,
 			'manualinput' => $manualinput,
 			'manualinput_enabled' => $manualinput_enabled,
+			'confirmation' => $confirmation,
 			'user' => [
 				'debug_mode' => $this->getDebugMode()
 			]
