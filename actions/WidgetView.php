@@ -12,6 +12,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
 		$scriptid = $this->fields_values['command_scriptid'] ?? null;
 		$button_label = trim($this->fields_values['command_label'] ?? '');
+		$manualinput = $this->fields_values['command_manualinput'] ?? '';
 
 		if ($button_label === '') {
 			$button_label = _('Execute');
@@ -19,6 +20,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 
 		$hostname = _('Unknown host');
 		$script_name = _('No script selected');
+		$manualinput_enabled = false;
 
 		if ($hostid !== null) {
 			$hosts = API::Host()->get([
@@ -33,12 +35,16 @@ class WidgetView extends CControllerDashboardWidgetView {
 
 		if ($scriptid) {
 			$scripts = API::Script()->get([
-				'output' => ['name'],
+				'output' => [
+					'name',
+					'manualinput'
+				],
 				'scriptids' => [$scriptid]
 			]);
 
 			if ($scripts) {
 				$script_name = $scripts[0]['name'];
+				$manualinput_enabled = (int) $scripts[0]['manualinput'] === 1;
 			}
 		}
 
@@ -49,6 +55,8 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'scriptid' => $scriptid,
 			'script_name' => $script_name,
 			'button_label' => $button_label,
+			'manualinput' => $manualinput,
+			'manualinput_enabled' => $manualinput_enabled,
 			'user' => [
 				'debug_mode' => $this->getDebugMode()
 			]

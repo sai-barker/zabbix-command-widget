@@ -12,6 +12,7 @@ use Zabbix\Widgets\{
 use Zabbix\Widgets\Fields\{
 	CWidgetFieldMultiSelectHost,
 	CWidgetFieldSelect,
+	CWidgetFieldTextArea,
 	CWidgetFieldTextBox
 };
 
@@ -58,6 +59,10 @@ class WidgetForm extends CWidgetForm {
 			->addField(
 				(new CWidgetFieldTextBox('command_label', _('Button label')))
 					->setDefault(_('Execute'))
+			)
+			->addField(
+				(new CWidgetFieldTextArea('command_manualinput', _('Manual input')))
+					->setDefault('')
 			);
 	}
 }

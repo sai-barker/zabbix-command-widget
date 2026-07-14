@@ -46,6 +46,10 @@ class CWidgetZabbixCommandWidget extends CWidget {
 			scriptid: button.dataset.scriptid
 		});
 
+		if (button.dataset.manualinputEnabled === '1') {
+			request.set('manualinput', button.dataset.manualinput ?? '');
+		}
+
 		try {
 			const response = await fetch(url.getUrl(), {
 				method: 'POST',

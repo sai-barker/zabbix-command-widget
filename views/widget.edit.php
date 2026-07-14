@@ -15,4 +15,7 @@
 	->addField(
 		new CWidgetFieldTextBoxView($data['fields']['command_label'])
 	)
+	->addField(
+		new CWidgetFieldTextAreaView($data['fields']['command_manualinput'])
+	)
 	->show();

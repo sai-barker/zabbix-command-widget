@@ -8,7 +8,12 @@
 $button = (new CButton('execute', $data['button_label']))
 	->addClass('js-command-widget-execute')
 	->setAttribute('data-hostid', (string) $data['hostid'])
-	->setAttribute('data-scriptid', (string) $data['scriptid']);
+	->setAttribute('data-scriptid', (string) $data['scriptid'])
+	->setAttribute('data-manualinput', $data['manualinput'])
+	->setAttribute(
+		'data-manualinput-enabled',
+		$data['manualinput_enabled'] ? '1' : '0'
+	);
 
 $result = (new CDiv())
 	->addClass('js-command-widget-result')
