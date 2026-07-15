@@ -95,6 +95,7 @@
 	background-color: var(--zcw-button-color);
 	border-color: var(--zcw-button-color);
 	color: var(--zcw-button-text-color);
+	font-size: var(--zcw-button-label-size);
 	min-height: var(--zcw-button-height);
 	white-space: normal;
 }
@@ -134,4 +135,65 @@
 	background: rgba(198, 40, 40, 0.12);
 	border-color: rgba(198, 40, 40, 0.4);
 	color: #c62828;
+}
+
+.zcw-edit-grid {
+	display: grid;
+	gap: 14px;
+	margin-top: 14px;
+	width: 100%;
+}
+
+.zcw-edit-grid-four {
+	grid-template-columns: repeat(4, minmax(120px, 1fr));
+}
+
+.zcw-edit-grid-three {
+	grid-template-columns: repeat(3, minmax(150px, 1fr));
+}
+
+.zcw-edit-mini-field {
+	min-width: 0;
+}
+
+.zcw-edit-mini-field > label {
+	display: block;
+	margin-bottom: 6px;
+}
+
+.zcw-edit-control {
+	align-items: center;
+	display: flex;
+	gap: 7px;
+}
+
+.zcw-edit-control input,
+.zcw-edit-control select {
+	max-width: 100%;
+}
+
+.zcw-edit-font-style {
+	display: grid;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.zcw-edit-checkboxes {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 22px;
+}
+
+.zcw-edit-checkbox {
+	align-items: center;
+	display: inline-flex;
+	gap: 7px;
+}
+
+@media (max-width: 900px) {
+	.zcw-edit-grid-four,
+	.zcw-edit-grid-three {
+		grid-template-columns: repeat(2, minmax(140px, 1fr));
+	}
 }

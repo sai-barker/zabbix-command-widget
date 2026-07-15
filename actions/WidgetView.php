@@ -74,6 +74,9 @@ class WidgetView extends CControllerDashboardWidgetView {
 				'height' => max(50, min(300,
 					(int) ($this->fields_values[$this->getFieldName($index, 'height')] ?? 100)
 				)),
+				'label_size' => max(50, min(300,
+					(int) ($this->fields_values[$this->getFieldName($index, 'label_size')] ?? 100)
+				)),
 				'description' => trim((string) (
 					$this->fields_values[$this->getFieldName($index, 'description')] ?? ''
 				)),

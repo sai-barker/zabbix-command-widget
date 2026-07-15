@@ -158,7 +158,7 @@ class WidgetForm extends CWidgetForm {
 				->addField(
 					(new CWidgetFieldIntegerBox(
 						$this->getFieldName($index, 'width'),
-						_('Button width (%)'),
+						_('Width'),
 						10,
 						100
 					))->setDefault(100)
@@ -166,7 +166,15 @@ class WidgetForm extends CWidgetForm {
 				->addField(
 					(new CWidgetFieldIntegerBox(
 						$this->getFieldName($index, 'height'),
-						_('Button height (%)'),
+						_('Height'),
+						50,
+						300
+					))->setDefault(100)
+				)
+				->addField(
+					(new CWidgetFieldIntegerBox(
+						$this->getFieldName($index, 'label_size'),
+						_('Label size'),
 						50,
 						300
 					))->setDefault(100)
@@ -178,7 +186,7 @@ class WidgetForm extends CWidgetForm {
 					))->setDefault('')
 				)
 				->addField(
-					(new CWidgetFieldSelect($this->getFieldName($index, 'description_position'), _('Description position'), [
+					(new CWidgetFieldSelect($this->getFieldName($index, 'description_position'), _('Position'), [
 						0 => _('Above button'),
 						1 => _('Below button')
 					]))->setDefault(0)
@@ -186,13 +194,13 @@ class WidgetForm extends CWidgetForm {
 				->addField(
 					(new CWidgetFieldIntegerBox(
 						$this->getFieldName($index, 'description_size'),
-						_('Description size (%)'),
+						_('Size'),
 						50,
 						300
 					))->setDefault(100)
 				)
 				->addField(
-					(new CWidgetFieldSelect($this->getFieldName($index, 'description_alignment'), _('Description alignment'), [
+					(new CWidgetFieldSelect($this->getFieldName($index, 'description_alignment'), _('Alignment'), [
 						0 => _('Left'),
 						1 => _('Center'),
 						2 => _('Right')

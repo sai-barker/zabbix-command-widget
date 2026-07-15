@@ -12,9 +12,9 @@ for (const colorpicker of jQuery('.<?= ZBX_STYLE_COLOR_PICKER ?> input')) {
 for (const manual_input of document.querySelectorAll(
 	'textarea[id^="command_"][id$="manualinput"]'
 )) {
-	manual_input.rows = 3;
+	manual_input.rows = 2;
 	manual_input.style.height = 'auto';
-	manual_input.style.minHeight = '72px';
+	manual_input.style.minHeight = '54px';
 	manual_input.style.resize = 'vertical';
 }
 
