@@ -34,7 +34,7 @@ class CWidgetZabbixCommandWidget extends CWidget {
 	async executeCommand(button) {
 		const confirmation = button.dataset.confirmation;
 
-		if (confirmation && !confirm(confirmation)) {
+		if (confirmation && !await this.confirmCommand(confirmation, button)) {
 			return;
 		}
 
@@ -110,6 +110,36 @@ class CWidgetZabbixCommandWidget extends CWidget {
 			button.textContent = original_label;
 			button.removeAttribute('aria-busy');
 		}
+	}
+
+	confirmCommand(confirmation, trigger_element) {
+		return new Promise((resolve) => {
+			const content = document.createElement('span');
+			content.classList.add('confirmation-msg');
+			content.textContent = confirmation;
+
+			overlayDialogue({
+				title: 'Execution confirmation',
+				content: content.outerHTML,
+				class: 'modal-popup modal-popup-small',
+				buttons: [
+					{
+						title: 'Cancel',
+						class: 'btn-alt',
+						cancel: true,
+						action: () => resolve(false)
+					},
+					{
+						title: 'Execute',
+						focused: true,
+						action: () => resolve(true)
+					}
+				]
+			}, {
+				position: Overlay.prototype.POSITION_CENTER,
+				trigger_element
+			});
+		});
 	}
 
 	setResult(element, state, message) {
