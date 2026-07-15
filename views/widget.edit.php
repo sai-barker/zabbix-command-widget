@@ -5,6 +5,8 @@
  * @var array $data
  */
 
+use Modules\ZabbixCommandWidget\Includes\WidgetForm;
+
 $form = new CWidgetFormView($data);
 
 $make_mini_field = static function(CWidgetFieldView $field, string $suffix = ''): CDiv {
@@ -31,7 +33,25 @@ $form->addField(
 	new CWidgetFieldMultiSelectHostView($data['fields']['hostid'])
 );
 
-for ($index = 1; $index <= 6; $index++) {
+$form->addFieldset(
+	(new CWidgetFormFieldsetCollapsibleView(_('Layout')))
+		->setExpanded()
+		->addFieldsGroup(
+			(new CWidgetFieldsGroupView(_('Button layout')))
+				->addField(new CWidgetFieldIntegerBoxView($data['fields']['button_count']))
+				->addField(new CWidgetFieldSelectView($data['fields']['layout_columns']))
+				->addField(new CWidgetFieldSelectView($data['fields']['button_alignment']))
+				->addField(new CWidgetFieldSelectView($data['fields']['layout_spacing']))
+				->addField(new CWidgetFieldCheckBoxView($data['fields']['show_details']))
+		)
+);
+
+$button_count = max(1, min(
+	WidgetForm::MAX_BUTTON_COUNT,
+	(int) $data['fields']['button_count']->getValue()
+));
+
+for ($index = 1; $index <= WidgetForm::MAX_BUTTON_COUNT; $index++) {
 	$prefix = $index === 1 ? 'command_' : 'command_'.$index.'_';
 
 	$button_color = $form->registerField(new CWidgetFieldColorView($data['fields'][$prefix.'color']));
@@ -95,25 +115,21 @@ for ($index = 1; $index <= 6; $index++) {
 		->addItem($description_layout)
 		->addItem($font_style);
 
-	$form->addFieldset(
-		(new CWidgetFormFieldsetCollapsibleView(_s('Button %1$d', $index)))
+	$button_fieldset = (new CWidgetFormFieldsetCollapsibleView(_s('Button %1$d', $index)))
 			->addField(new CWidgetFieldSelectView($data['fields'][$prefix.'scriptid']))
 			->addField(new CWidgetFieldTextAreaView($data['fields'][$prefix.'manualinput']))
 			->addFieldsGroup($button_appearance)
-			->addFieldsGroup($description)
-	);
+			->addFieldsGroup($description);
+
+	$button_fieldset->setId('zcw-button-fieldset-'.$index);
+
+	if ($index > $button_count) {
+		$button_fieldset->addStyle('display: none;');
+	}
+
+	$form->addFieldset($button_fieldset);
 }
 
 $form
-	->addFieldset(
-		(new CWidgetFormFieldsetCollapsibleView(_('Layout')))
-			->addFieldsGroup(
-				(new CWidgetFieldsGroupView(_('Button layout')))
-					->addField(new CWidgetFieldSelectView($data['fields']['layout_columns']))
-					->addField(new CWidgetFieldSelectView($data['fields']['button_alignment']))
-					->addField(new CWidgetFieldSelectView($data['fields']['layout_spacing']))
-			)
-	)
-	->addField(new CWidgetFieldCheckBoxView($data['fields']['show_details']))
 	->includeJsFile('widget.edit.js.php')
 	->show();

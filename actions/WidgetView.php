@@ -7,7 +7,7 @@ use CControllerDashboardWidgetView;
 use CControllerResponseData;
 
 class WidgetView extends CControllerDashboardWidgetView {
-	private const COMMAND_COUNT = 6;
+	private const MAX_BUTTON_COUNT = 20;
 
 	protected function doAction(): void {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
@@ -15,6 +15,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 		$layout_columns = max(1, min(6, (int) ($this->fields_values['layout_columns'] ?? 2)));
 		$button_alignment = max(0, min(2, (int) ($this->fields_values['button_alignment'] ?? 1)));
 		$layout_spacing = max(0, min(2, (int) ($this->fields_values['layout_spacing'] ?? 1)));
+		$button_count = max(1, min(self::MAX_BUTTON_COUNT, (int) ($this->fields_values['button_count'] ?? 1)));
 		$hostname = _('Unknown host');
 
 		if ($hostid !== null) {
@@ -30,7 +31,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 
 		$scriptids = [];
 
-		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+		for ($index = 1; $index <= $button_count; $index++) {
 			$scriptid = $this->fields_values[$this->getFieldName($index, 'scriptid')] ?? 0;
 
 			if ($scriptid) {
@@ -48,7 +49,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 
 		$commands = [];
 
-		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+		for ($index = 1; $index <= $button_count; $index++) {
 			$scriptid = $this->fields_values[$this->getFieldName($index, 'scriptid')] ?? 0;
 
 			if (!$scriptid || !array_key_exists($scriptid, $scripts)) {
@@ -109,6 +110,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'hostid' => $hostid,
 			'hostname' => $hostname,
 			'commands' => $commands,
+			'button_count' => $button_count,
 			'layout_columns' => $layout_columns,
 			'button_alignment' => $button_alignment,
 			'layout_spacing' => $layout_spacing,

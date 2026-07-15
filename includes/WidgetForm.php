@@ -20,7 +20,7 @@ use Zabbix\Widgets\Fields\{
 };
 
 class WidgetForm extends CWidgetForm {
-	private const COMMAND_COUNT = 6;
+	public const MAX_BUTTON_COUNT = 20;
 
 	public function validate(bool $strict = false): array {
 		$errors = parent::validate($strict);
@@ -29,9 +29,10 @@ class WidgetForm extends CWidgetForm {
 			return $errors;
 		}
 
+		$button_count = max(1, min(self::MAX_BUTTON_COUNT, (int) $this->getFieldValue('button_count')));
 		$scriptids = [];
 
-		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+		for ($index = 1; $index <= $button_count; $index++) {
 			$scriptid = $this->getFieldValue($this->getFieldName($index, 'scriptid'));
 
 			if ($scriptid) {
@@ -51,10 +52,11 @@ class WidgetForm extends CWidgetForm {
 			])
 			: [];
 
-		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+		for ($index = 1; $index <= $button_count; $index++) {
 			$scriptid = $this->getFieldValue($this->getFieldName($index, 'scriptid'));
 
 			if (!$scriptid) {
+				$errors[] = _s('Button %1$d: select a script.', $index);
 				continue;
 			}
 
@@ -132,7 +134,13 @@ class WidgetForm extends CWidgetForm {
 				->setMultiple(false)
 		);
 
-		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+		$this->addField(
+			(new CWidgetFieldIntegerBox('button_count', _('Number of buttons'), 1, self::MAX_BUTTON_COUNT))
+				->setDefault(1)
+				->setFlags(CWidgetField::FLAG_NOT_EMPTY)
+		);
+
+		for ($index = 1; $index <= self::MAX_BUTTON_COUNT; $index++) {
 			$script_field = new CWidgetFieldSelect(
 				$this->getFieldName($index, 'scriptid'),
 				_('Script'),

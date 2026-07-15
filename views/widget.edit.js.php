@@ -27,6 +27,30 @@ for (const description of document.querySelectorAll(
 	description.style.resize = 'vertical';
 }
 
+const button_count = document.getElementById('button_count');
+
+const update_button_fieldsets = () => {
+	if (!button_count) {
+		return;
+	}
+
+	const count = Math.max(1, Math.min(20, Number.parseInt(button_count.value, 10) || 1));
+
+	for (let index = 1; index <= 20; index++) {
+		const fieldset = document.getElementById(`zcw-button-fieldset-${index}`);
+
+		if (fieldset) {
+			fieldset.style.display = index <= count ? '' : 'none';
+		}
+	}
+};
+
+if (button_count) {
+	button_count.addEventListener('input', update_button_fieldsets);
+	button_count.addEventListener('change', update_button_fieldsets);
+	update_button_fieldsets();
+}
+
 const overlay = overlays_stack.getById('widget_properties');
 
 if (overlay) {
