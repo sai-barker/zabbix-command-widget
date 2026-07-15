@@ -20,6 +20,9 @@
         "js_class": "CWidgetZabbixCommandWidget"
     },
     "assets": {
+        "css": [
+            "widget.css"
+        ],
         "js": [
             "class.widget.js"
         ]

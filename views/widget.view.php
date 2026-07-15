@@ -18,18 +18,25 @@ $button = (new CButton('execute', $data['button_label']))
 
 $result = (new CDiv())
 	->addClass('js-command-widget-result')
+	->addClass('zcw-result')
 	->setAttribute('aria-live', 'polite');
 
-$items = [];
+$content = (new CDiv())->addClass('zcw-content');
 
 if ($data['show_details']) {
-	$items[] = new CDiv('Host: '.$data['hostname']);
-	$items[] = new CDiv('Script: '.$data['script_name']);
+	$content->addItem(
+		(new CDiv([
+			new CDiv('Host: '.$data['hostname']),
+			new CDiv('Script: '.$data['script_name'])
+		]))->addClass('zcw-details')
+	);
 }
 
-$items[] = $button;
-$items[] = $result;
+$content->addItem(
+	(new CDiv($button))->addClass('zcw-actions')
+);
+$content->addItem($result);
 
 (new CWidgetView($data))
-	->addItem($items)
+	->addItem($content)
 	->show();

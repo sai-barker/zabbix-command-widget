@@ -40,9 +40,13 @@ class CWidgetZabbixCommandWidget extends CWidget {
 
 		const result_element =
 			this._target.querySelector('.js-command-widget-result');
+		const original_label = button.textContent;
 
 		button.disabled = true;
-		result_element.textContent = 'Executing...';
+		button.textContent = 'Executing...';
+		button.setAttribute('aria-busy', 'true');
+
+		this.setResult(result_element, 'pending', 'Executing command...');
 
 		const url = new Curl('zabbix.php');
 		url.setArgument('action', 'zabbix_command_widget.execute');
@@ -70,7 +74,6 @@ class CWidgetZabbixCommandWidget extends CWidget {
 			});
 
 			const response_text = await response.text();
-
 			let data;
 
 			try {
@@ -90,22 +93,32 @@ class CWidgetZabbixCommandWidget extends CWidget {
 				);
 			}
 
-			result_element.textContent =
+			this.setResult(
+				result_element,
+				'success',
 				data.output !== ''
-					? `Success: ${data.output}`
-					: 'Success: Script executed.';
+					? data.output
+					: 'Script executed successfully.'
+			);
 		}
 		catch (error) {
-			console.error(
-				'Command Widget execution failed:',
-				error
-			);
-
-			result_element.textContent =
-				`Failed: ${error.message}`;
+			console.error('Command Widget execution failed:', error);
+			this.setResult(result_element, 'error', error.message);
 		}
 		finally {
 			button.disabled = false;
+			button.textContent = original_label;
+			button.removeAttribute('aria-busy');
 		}
+	}
+
+	setResult(element, state, message) {
+		element.classList.remove(
+			'zcw-result-pending',
+			'zcw-result-success',
+			'zcw-result-error'
+		);
+		element.classList.add(`zcw-result-${state}`);
+		element.textContent = message;
 	}
 }
