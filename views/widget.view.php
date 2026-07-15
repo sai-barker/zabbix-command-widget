@@ -20,11 +20,16 @@ $result = (new CDiv())
 	->addClass('js-command-widget-result')
 	->setAttribute('aria-live', 'polite');
 
+$items = [];
+
+if ($data['show_details']) {
+	$items[] = new CDiv('Host: '.$data['hostname']);
+	$items[] = new CDiv('Script: '.$data['script_name']);
+}
+
+$items[] = $button;
+$items[] = $result;
+
 (new CWidgetView($data))
-	->addItem([
-		new CDiv('Host: '.$data['hostname']),
-		new CDiv('Script: '.$data['script_name']),
-		$button,
-		$result
-	])
+	->addItem($items)
 	->show();

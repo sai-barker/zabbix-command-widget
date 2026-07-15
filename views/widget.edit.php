@@ -18,4 +18,7 @@
 	->addField(
 		new CWidgetFieldTextAreaView($data['fields']['command_manualinput'])
 	)
+	->addField(
+		new CWidgetFieldCheckBoxView($data['fields']['show_details'])
+	)
 	->show();

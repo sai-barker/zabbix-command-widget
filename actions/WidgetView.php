@@ -13,6 +13,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 		$scriptid = $this->fields_values['command_scriptid'] ?? null;
 		$button_label = trim($this->fields_values['command_label'] ?? '');
 		$manualinput = $this->fields_values['command_manualinput'] ?? '';
+		$show_details = (int) ($this->fields_values['show_details'] ?? 0) === 1;
 
 		if ($button_label === '') {
 			$button_label = _('Execute');
@@ -61,6 +62,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'manualinput' => $manualinput,
 			'manualinput_enabled' => $manualinput_enabled,
 			'confirmation' => $confirmation,
+			'show_details' => $show_details,
 			'user' => [
 				'debug_mode' => $this->getDebugMode()
 			]

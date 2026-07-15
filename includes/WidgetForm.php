@@ -10,6 +10,7 @@ use Zabbix\Widgets\{
 };
 
 use Zabbix\Widgets\Fields\{
+	CWidgetFieldCheckBox,
 	CWidgetFieldMultiSelectHost,
 	CWidgetFieldSelect,
 	CWidgetFieldTextArea,
@@ -63,6 +64,10 @@ class WidgetForm extends CWidgetForm {
 			->addField(
 				(new CWidgetFieldTextArea('command_manualinput', _('Manual input')))
 					->setDefault('')
+			)
+			->addField(
+				(new CWidgetFieldCheckBox('show_details', _('Show host and script details')))
+					->setDefault(0)
 			);
 	}
 }
