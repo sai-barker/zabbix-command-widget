@@ -21,6 +21,13 @@ for ($index = 1; $index <= 6; $index++) {
 			->addField(new CWidgetFieldColorView($data['fields'][$prefix.'color']))
 			->addField(new CWidgetFieldIntegerBoxView($data['fields'][$prefix.'width']))
 			->addField(new CWidgetFieldIntegerBoxView($data['fields'][$prefix.'height']))
+			->addField(new CWidgetFieldTextAreaView($data['fields'][$prefix.'description']))
+			->addField(new CWidgetFieldSelectView($data['fields'][$prefix.'description_position']))
+			->addField(new CWidgetFieldIntegerBoxView($data['fields'][$prefix.'description_size']))
+			->addField(new CWidgetFieldSelectView($data['fields'][$prefix.'description_alignment']))
+			->addField(new CWidgetFieldCheckBoxView($data['fields'][$prefix.'description_bold']))
+			->addField(new CWidgetFieldCheckBoxView($data['fields'][$prefix.'description_italic']))
+			->addField(new CWidgetFieldCheckBoxView($data['fields'][$prefix.'description_underline']))
 			->addField(new CWidgetFieldTextAreaView($data['fields'][$prefix.'manualinput']))
 	);
 }

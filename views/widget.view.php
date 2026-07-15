@@ -59,13 +59,53 @@ foreach ($data['commands'] as $command) {
 		->addClass('zcw-result')
 		->setAttribute('aria-live', 'polite');
 
-	$command_items[] = (new CDiv([
-		(new CDiv($button))
+	$button_container = (new CDiv($button))
 			->addClass('zcw-actions')
 			->addClass($alignment_classes[$data['button_alignment']])
-			->addStyle('--zcw-button-width: '.$command['width'].'%;'),
-		$result
-	]))->addClass('zcw-command');
+			->addStyle('--zcw-button-width: '.$command['width'].'%;');
+
+	$command_content = [];
+
+	if ($command['description'] !== '') {
+		$description_size = max(7, (int) round(14 * $command['description_size'] / 100));
+		$description_classes = [
+			'zcw-description',
+			$alignment_classes[$command['description_alignment']]
+		];
+
+		if ($command['description_bold']) {
+			$description_classes[] = 'zcw-description-bold';
+		}
+
+		if ($command['description_italic']) {
+			$description_classes[] = 'zcw-description-italic';
+		}
+
+		if ($command['description_underline']) {
+			$description_classes[] = 'zcw-description-underline';
+		}
+
+		$description = new CDiv($command['description']);
+
+		foreach ($description_classes as $description_class) {
+			$description->addClass($description_class);
+		}
+
+		$description->addStyle('font-size: '.$description_size.'px;');
+
+		if ($command['description_position'] === 0) {
+			$command_content[] = $description;
+		}
+	}
+
+	$command_content[] = $button_container;
+
+	if ($command['description'] !== '' && $command['description_position'] === 1) {
+		$command_content[] = $description;
+	}
+
+	$command_content[] = $result;
+	$command_items[] = (new CDiv($command_content))->addClass('zcw-command');
 }
 
 $content->addItem(

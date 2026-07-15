@@ -74,6 +74,27 @@ class WidgetView extends CControllerDashboardWidgetView {
 				'height' => max(50, min(300,
 					(int) ($this->fields_values[$this->getFieldName($index, 'height')] ?? 100)
 				)),
+				'description' => trim((string) (
+					$this->fields_values[$this->getFieldName($index, 'description')] ?? ''
+				)),
+				'description_position' => max(0, min(1, (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_position')] ?? 0
+				))),
+				'description_size' => max(50, min(300, (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_size')] ?? 100
+				))),
+				'description_alignment' => max(0, min(2, (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_alignment')] ?? 1
+				))),
+				'description_bold' => (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_bold')] ?? 0
+				) === 1,
+				'description_italic' => (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_italic')] ?? 0
+				) === 1,
+				'description_underline' => (int) (
+					$this->fields_values[$this->getFieldName($index, 'description_underline')] ?? 0
+				) === 1,
 				'manualinput' => $this->fields_values[$this->getFieldName($index, 'manualinput')] ?? '',
 				'manualinput_enabled' => (int) $script['manualinput'] === 1,
 				'confirmation' => $script['confirmation'] ?? ''

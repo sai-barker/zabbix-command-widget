@@ -31,6 +31,37 @@
 	gap: 8px;
 }
 
+.zcw-description {
+	display: block;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+}
+
+.zcw-description.zcw-align-left {
+	text-align: left;
+}
+
+.zcw-description.zcw-align-center {
+	text-align: center;
+}
+
+.zcw-description.zcw-align-right {
+	text-align: right;
+}
+
+.zcw-description-bold {
+	font-weight: bold;
+}
+
+.zcw-description-italic {
+	font-style: italic;
+}
+
+.zcw-description-underline {
+	text-decoration: underline;
+}
+
 .zcw-details {
 	display: grid;
 	gap: 4px;

@@ -18,6 +18,15 @@ for (const manual_input of document.querySelectorAll(
 	manual_input.style.resize = 'vertical';
 }
 
+for (const description of document.querySelectorAll(
+	'textarea[id^="command_"][id$="description"]'
+)) {
+	description.rows = 2;
+	description.style.height = 'auto';
+	description.style.minHeight = '54px';
+	description.style.resize = 'vertical';
+}
+
 const overlay = overlays_stack.getById('widget_properties');
 
 if (overlay) {

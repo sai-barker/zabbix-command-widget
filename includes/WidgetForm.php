@@ -172,6 +172,45 @@ class WidgetForm extends CWidgetForm {
 					))->setDefault(100)
 				)
 				->addField(
+					(new CWidgetFieldTextArea(
+						$this->getFieldName($index, 'description'),
+						_('Description')
+					))->setDefault('')
+				)
+				->addField(
+					(new CWidgetFieldSelect($this->getFieldName($index, 'description_position'), _('Description position'), [
+						0 => _('Above button'),
+						1 => _('Below button')
+					]))->setDefault(0)
+				)
+				->addField(
+					(new CWidgetFieldIntegerBox(
+						$this->getFieldName($index, 'description_size'),
+						_('Description size (%)'),
+						50,
+						300
+					))->setDefault(100)
+				)
+				->addField(
+					(new CWidgetFieldSelect($this->getFieldName($index, 'description_alignment'), _('Description alignment'), [
+						0 => _('Left'),
+						1 => _('Center'),
+						2 => _('Right')
+					]))->setDefault(1)
+				)
+				->addField(
+					(new CWidgetFieldCheckBox($this->getFieldName($index, 'description_bold'), _('Bold')))
+						->setDefault(0)
+				)
+				->addField(
+					(new CWidgetFieldCheckBox($this->getFieldName($index, 'description_italic'), _('Italic')))
+						->setDefault(0)
+				)
+				->addField(
+					(new CWidgetFieldCheckBox($this->getFieldName($index, 'description_underline'), _('Underline')))
+						->setDefault(0)
+				)
+				->addField(
 					(new CWidgetFieldTextArea($this->getFieldName($index, 'manualinput'), _('Manual input')))
 						->setDefault('')
 				);
