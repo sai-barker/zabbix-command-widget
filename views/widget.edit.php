@@ -5,24 +5,25 @@
  * @var array $data
  */
 
-(new CWidgetFormView($data))
-	->addField(
-		new CWidgetFieldMultiSelectHostView($data['fields']['hostid'])
-	)
-	->addField(
-		new CWidgetFieldSelectView($data['fields']['command_scriptid'])
-	)
-	->addField(
-		new CWidgetFieldTextBoxView($data['fields']['command_label'])
-	)
-	->addField(
-		new CWidgetFieldColorView($data['fields']['command_color'])
-	)
-	->addField(
-		new CWidgetFieldTextAreaView($data['fields']['command_manualinput'])
-	)
-	->addField(
-		new CWidgetFieldCheckBoxView($data['fields']['show_details'])
-	)
+$form = new CWidgetFormView($data);
+
+$form->addField(
+	new CWidgetFieldMultiSelectHostView($data['fields']['hostid'])
+);
+
+for ($index = 1; $index <= 6; $index++) {
+	$prefix = $index === 1 ? 'command_' : 'command_'.$index.'_';
+
+	$form->addFieldset(
+		(new CWidgetFormFieldsetCollapsibleView(_s('Button %1$d', $index)))
+			->addField(new CWidgetFieldSelectView($data['fields'][$prefix.'scriptid']))
+			->addField(new CWidgetFieldTextBoxView($data['fields'][$prefix.'label']))
+			->addField(new CWidgetFieldColorView($data['fields'][$prefix.'color']))
+			->addField(new CWidgetFieldTextAreaView($data['fields'][$prefix.'manualinput']))
+	);
+}
+
+$form
+	->addField(new CWidgetFieldCheckBoxView($data['fields']['show_details']))
 	->includeJsFile('widget.edit.js.php')
 	->show();

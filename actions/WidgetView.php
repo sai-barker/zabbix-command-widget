@@ -7,23 +7,12 @@ use CControllerDashboardWidgetView;
 use CControllerResponseData;
 
 class WidgetView extends CControllerDashboardWidgetView {
+	private const COMMAND_COUNT = 6;
 
 	protected function doAction(): void {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
-		$scriptid = $this->fields_values['command_scriptid'] ?? null;
-		$button_label = trim($this->fields_values['command_label'] ?? '');
-		$button_color = $this->fields_values['command_color'] ?? '0275B8';
-		$manualinput = $this->fields_values['command_manualinput'] ?? '';
 		$show_details = (int) ($this->fields_values['show_details'] ?? 0) === 1;
-
-		if ($button_label === '') {
-			$button_label = _('Execute');
-		}
-
 		$hostname = _('Unknown host');
-		$script_name = _('No script selected');
-		$manualinput_enabled = false;
-		$confirmation = '';
 
 		if ($hostid !== null) {
 			$hosts = API::Host()->get([
@@ -36,38 +25,63 @@ class WidgetView extends CControllerDashboardWidgetView {
 			}
 		}
 
-		if ($scriptid) {
-			$scripts = API::Script()->get([
-				'output' => [
-					'name',
-					'manualinput',
-					'confirmation'
-				],
-				'scriptids' => [$scriptid]
-			]);
+		$scriptids = [];
 
-			if ($scripts) {
-				$script_name = $scripts[0]['name'];
-				$manualinput_enabled = (int) $scripts[0]['manualinput'] === 1;
-				$confirmation = $scripts[0]['confirmation'] ?? '';
+		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+			$scriptid = $this->fields_values[$this->getFieldName($index, 'scriptid')] ?? 0;
+
+			if ($scriptid) {
+				$scriptids[] = $scriptid;
 			}
+		}
+
+		$scripts = $scriptids
+			? API::Script()->get([
+				'output' => ['name', 'manualinput', 'confirmation'],
+				'scriptids' => $scriptids,
+				'preservekeys' => true
+			])
+			: [];
+
+		$commands = [];
+
+		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+			$scriptid = $this->fields_values[$this->getFieldName($index, 'scriptid')] ?? 0;
+
+			if (!$scriptid || !array_key_exists($scriptid, $scripts)) {
+				continue;
+			}
+
+			$script = $scripts[$scriptid];
+			$label = trim((string) ($this->fields_values[$this->getFieldName($index, 'label')] ?? ''));
+
+			if ($label === '') {
+				$label = _s('Button %1$d', $index);
+			}
+
+			$commands[] = [
+				'index' => $index,
+				'scriptid' => $scriptid,
+				'script_name' => $script['name'],
+				'label' => $label,
+				'color' => $this->fields_values[$this->getFieldName($index, 'color')] ?? '0275B8',
+				'manualinput' => $this->fields_values[$this->getFieldName($index, 'manualinput')] ?? '',
+				'manualinput_enabled' => (int) $script['manualinput'] === 1,
+				'confirmation' => $script['confirmation'] ?? ''
+			];
 		}
 
 		$this->setResponse(new CControllerResponseData([
 			'name' => $this->getInput('name', $this->widget->getName()),
 			'hostid' => $hostid,
 			'hostname' => $hostname,
-			'scriptid' => $scriptid,
-			'script_name' => $script_name,
-			'button_label' => $button_label,
-			'button_color' => $button_color,
-			'manualinput' => $manualinput,
-			'manualinput_enabled' => $manualinput_enabled,
-			'confirmation' => $confirmation,
+			'commands' => $commands,
 			'show_details' => $show_details,
-			'user' => [
-				'debug_mode' => $this->getDebugMode()
-			]
+			'user' => ['debug_mode' => $this->getDebugMode()]
 		]));
+	}
+
+	private function getFieldName(int $index, string $field): string {
+		return $index === 1 ? 'command_'.$field : 'command_'.$index.'_'.$field;
 	}
 }

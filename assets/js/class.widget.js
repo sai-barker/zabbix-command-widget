@@ -38,8 +38,15 @@ class CWidgetZabbixCommandWidget extends CWidget {
 			return;
 		}
 
-		const result_element =
-			this._target.querySelector('.js-command-widget-result');
+		const command = button.closest('.zcw-command');
+		const result_element = command !== null
+			? command.querySelector('.js-command-widget-result')
+			: null;
+
+		if (result_element === null) {
+			console.error('Command Widget result element was not found.');
+			return;
+		}
 		const original_label = button.textContent;
 
 		button.disabled = true;

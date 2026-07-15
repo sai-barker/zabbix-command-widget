@@ -19,6 +19,7 @@ use Zabbix\Widgets\Fields\{
 };
 
 class WidgetForm extends CWidgetForm {
+	private const COMMAND_COUNT = 6;
 
 	public function validate(bool $strict = false): array {
 		$errors = parent::validate($strict);
@@ -27,61 +28,85 @@ class WidgetForm extends CWidgetForm {
 			return $errors;
 		}
 
-		$scriptid = $this->getFieldValue('command_scriptid');
-		$manualinput = (string) $this->getFieldValue('command_manualinput');
+		$scriptids = [];
 
-		$scripts = API::Script()->get([
-			'output' => [
-				'manualinput',
-				'manualinput_validator_type',
-				'manualinput_validator'
-			],
-			'scriptids' => [$scriptid]
-		]);
+		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+			$scriptid = $this->getFieldValue($this->getFieldName($index, 'scriptid'));
 
-		if (!$scripts) {
-			return [_('The selected script is unavailable or you do not have permission to use it.')];
+			if ($scriptid) {
+				$scriptids[] = $scriptid;
+			}
 		}
 
-		$script = $scripts[0];
+		$scripts = $scriptids
+			? API::Script()->get([
+				'output' => [
+					'manualinput',
+					'manualinput_validator_type',
+					'manualinput_validator'
+				],
+				'scriptids' => $scriptids,
+				'preservekeys' => true
+			])
+			: [];
 
-		if ((int) $script['manualinput'] !== ZBX_SCRIPT_MANUALINPUT_ENABLED) {
-			return $errors;
-		}
+		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+			$scriptid = $this->getFieldValue($this->getFieldName($index, 'scriptid'));
 
-		$validator = $script['manualinput_validator'];
-
-		if ((int) $script['manualinput_validator_type'] === ZBX_SCRIPT_MANUALINPUT_TYPE_LIST) {
-			$allowed_values = array_map('trim', explode(',', $validator));
-
-			if (!in_array($manualinput, $allowed_values, true)) {
-				$errors[] = _s(
-					'Manual input must be one of: %1$s.',
-					implode(', ', $allowed_values)
-				);
+			if (!$scriptid) {
+				continue;
 			}
 
-			return $errors;
-		}
+			if (!array_key_exists($scriptid, $scripts)) {
+				$errors[] = _s(
+					'Button %1$d: the selected script is unavailable or you do not have permission to use it.',
+					$index
+				);
+				continue;
+			}
 
-		$regex_validator = new \CRegexValidator([
-			'messageInvalid' => _('The input validation rule must be a string.'),
-			'messageRegex' => _('Incorrect regular expression "%1$s": "%2$s"')
-		]);
+			$script = $scripts[$scriptid];
 
-		if (!$regex_validator->validate($validator)) {
-			$errors[] = $regex_validator->getError();
+			if ((int) $script['manualinput'] !== ZBX_SCRIPT_MANUALINPUT_ENABLED) {
+				continue;
+			}
 
-			return $errors;
-		}
+			$manualinput = (string) $this->getFieldValue($this->getFieldName($index, 'manualinput'));
+			$validator = $script['manualinput_validator'];
 
-		$regular_expression = '/'.str_replace('/', '\\/', $validator).'/';
+			if ((int) $script['manualinput_validator_type'] === ZBX_SCRIPT_MANUALINPUT_TYPE_LIST) {
+				$allowed_values = array_map('trim', explode(',', $validator));
 
-		if (!preg_match($regular_expression, trim($manualinput))) {
-			$errors[] = _s(
-				'Manual input does not match the script validation rule: %1$s',
-				$validator
-			);
+				if (!in_array($manualinput, $allowed_values, true)) {
+					$errors[] = _s(
+						'Button %1$d manual input must be one of: %2$s.',
+						$index,
+						implode(', ', $allowed_values)
+					);
+				}
+
+				continue;
+			}
+
+			$regex_validator = new \CRegexValidator([
+				'messageInvalid' => _('The input validation rule must be a string.'),
+				'messageRegex' => _('Incorrect regular expression "%1$s": "%2$s"')
+			]);
+
+			if (!$regex_validator->validate($validator)) {
+				$errors[] = _s('Button %1$d: %2$s', $index, $regex_validator->getError());
+				continue;
+			}
+
+			$regular_expression = '/'.str_replace('/', '\\/', $validator).'/';
+
+			if (!preg_match($regular_expression, trim($manualinput))) {
+				$errors[] = _s(
+					'Button %1$d manual input does not match the script validation rule: %2$s',
+					$index,
+					$validator
+				);
+			}
 		}
 
 		return $errors;
@@ -90,56 +115,61 @@ class WidgetForm extends CWidgetForm {
 	public function addFields(): self {
 		$scripts = API::Script()->get([
 			'output' => ['scriptid', 'name'],
-			'filter' => [
-				'scope' => 2
-			],
+			'filter' => ['scope' => 2],
 			'sortfield' => 'name'
 		]);
 
-		$script_options = [
-			0 => _('Select a script')
-		];
+		$script_options = [0 => _('Select a script')];
 
 		foreach ($scripts as $script) {
 			$script_options[(int) $script['scriptid']] = $script['name'];
 		}
 
-		return $this
-			->addField(
-				(new CWidgetFieldMultiSelectHost('hostid', _('Host')))
-					->setFlags(
-						CWidgetField::FLAG_NOT_EMPTY
-						| CWidgetField::FLAG_LABEL_ASTERISK
-					)
-					->setMultiple(false)
-			)
-			->addField(
-				(new CWidgetFieldSelect(
-					'command_scriptid',
-					_('Script'),
-					$script_options
-				))
-					->setDefault(0)
-					->setFlags(
-						CWidgetField::FLAG_NOT_EMPTY
-						| CWidgetField::FLAG_LABEL_ASTERISK
-					)
-			)
-			->addField(
-				(new CWidgetFieldTextBox('command_label', _('Button label')))
-					->setDefault(_('Execute'))
-			)
-			->addField(
-				(new CWidgetFieldColor('command_color', _('Button color')))
-					->setDefault('0275B8')
-			)
-			->addField(
-				(new CWidgetFieldTextArea('command_manualinput', _('Manual input')))
-					->setDefault('')
-			)
-			->addField(
-				(new CWidgetFieldCheckBox('show_details', _('Show host and script details')))
-					->setDefault(0)
+		$this->addField(
+			(new CWidgetFieldMultiSelectHost('hostid', _('Host')))
+				->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+				->setMultiple(false)
+		);
+
+		for ($index = 1; $index <= self::COMMAND_COUNT; $index++) {
+			$script_field = new CWidgetFieldSelect(
+				$this->getFieldName($index, 'scriptid'),
+				_('Script'),
+				$script_options
 			);
+
+			$script_field->setDefault(0);
+
+			if ($index === 1) {
+				$script_field->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK);
+			}
+
+			$this
+				->addField($script_field)
+				->addField(
+					(new CWidgetFieldTextBox($this->getFieldName($index, 'label'), _('Button label')))
+						->setDefault($index === 1 ? _('Execute') : '')
+				)
+				->addField(
+					(new CWidgetFieldColor($this->getFieldName($index, 'color'), _('Button color')))
+						->setDefault('0275B8')
+				)
+				->addField(
+					(new CWidgetFieldTextArea($this->getFieldName($index, 'manualinput'), _('Manual input')))
+						->setDefault('')
+				);
+		}
+
+		return $this->addField(
+			(new CWidgetFieldCheckBox('show_details', _('Show host and script details')))->setDefault(0)
+		);
+	}
+
+	private function getFieldName(int $index, string $field): string {
+		if ($index === 1) {
+			return 'command_'.$field;
+		}
+
+		return 'command_'.$index.'_'.$field;
 	}
 }
