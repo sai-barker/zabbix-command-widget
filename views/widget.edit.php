@@ -20,6 +20,7 @@ for ($index = 1; $index <= 6; $index++) {
 			->addField(new CWidgetFieldTextBoxView($data['fields'][$prefix.'label']))
 			->addField(new CWidgetFieldColorView($data['fields'][$prefix.'color']))
 			->addField(new CWidgetFieldIntegerBoxView($data['fields'][$prefix.'width']))
+			->addField(new CWidgetFieldIntegerBoxView($data['fields'][$prefix.'height']))
 			->addField(new CWidgetFieldTextAreaView($data['fields'][$prefix.'manualinput']))
 	);
 }

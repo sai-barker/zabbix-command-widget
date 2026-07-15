@@ -38,11 +38,16 @@ $command_items = [];
 
 foreach ($data['commands'] as $command) {
 	[$button_color, $text_color] = $get_button_colors($command['color']);
+	$button_height = max(18, (int) round(36 * $command['height'] / 100));
 
 	$button = (new CButton('execute_'.$command['index'], $command['label']))
 		->addClass('js-command-widget-execute')
 		->addClass('zcw-command-button')
-		->addStyle('--zcw-button-color: '.$button_color.'; --zcw-button-text-color: '.$text_color.';')
+		->addStyle(
+			'--zcw-button-color: '.$button_color.'; '
+			.'--zcw-button-text-color: '.$text_color.'; '
+			.'--zcw-button-height: '.$button_height.'px;'
+		)
 		->setAttribute('data-hostid', (string) $data['hostid'])
 		->setAttribute('data-scriptid', (string) $command['scriptid'])
 		->setAttribute('data-manualinput', $command['manualinput'])

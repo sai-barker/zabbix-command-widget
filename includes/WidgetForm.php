@@ -164,6 +164,14 @@ class WidgetForm extends CWidgetForm {
 					))->setDefault(100)
 				)
 				->addField(
+					(new CWidgetFieldIntegerBox(
+						$this->getFieldName($index, 'height'),
+						_('Button height (%)'),
+						50,
+						300
+					))->setDefault(100)
+				)
+				->addField(
 					(new CWidgetFieldTextArea($this->getFieldName($index, 'manualinput'), _('Manual input')))
 						->setDefault('')
 				);

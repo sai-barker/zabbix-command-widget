@@ -71,6 +71,9 @@ class WidgetView extends CControllerDashboardWidgetView {
 				'width' => max(10, min(100,
 					(int) ($this->fields_values[$this->getFieldName($index, 'width')] ?? 100)
 				)),
+				'height' => max(50, min(300,
+					(int) ($this->fields_values[$this->getFieldName($index, 'height')] ?? 100)
+				)),
 				'manualinput' => $this->fields_values[$this->getFieldName($index, 'manualinput')] ?? '',
 				'manualinput_enabled' => (int) $script['manualinput'] === 1,
 				'confirmation' => $script['confirmation'] ?? ''
