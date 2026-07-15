@@ -9,8 +9,19 @@
 
 .zcw-command-list {
 	display: grid;
+	grid-template-columns: repeat(var(--zcw-columns), minmax(0, 1fr));
+}
+
+.zcw-spacing-compact {
+	gap: 6px;
+}
+
+.zcw-spacing-normal {
 	gap: 12px;
-	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.zcw-spacing-relaxed {
+	gap: 20px;
 }
 
 .zcw-command {
@@ -27,12 +38,23 @@
 
 .zcw-actions {
 	display: flex;
+}
+
+.zcw-align-left {
+	justify-content: flex-start;
+}
+
+.zcw-align-center {
 	justify-content: center;
 }
 
+.zcw-align-right {
+	justify-content: flex-end;
+}
+
 .zcw-actions .js-command-widget-execute {
-	width: 100%;
-	min-width: 140px;
+	max-width: 100%;
+	width: var(--zcw-button-width);
 }
 
 .zcw-command-button,

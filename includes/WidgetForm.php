@@ -12,6 +12,7 @@ use Zabbix\Widgets\{
 use Zabbix\Widgets\Fields\{
 	CWidgetFieldCheckBox,
 	CWidgetFieldColor,
+	CWidgetFieldIntegerBox,
 	CWidgetFieldMultiSelectHost,
 	CWidgetFieldSelect,
 	CWidgetFieldTextArea,
@@ -155,14 +156,47 @@ class WidgetForm extends CWidgetForm {
 						->setDefault('0275B8')
 				)
 				->addField(
+					(new CWidgetFieldIntegerBox(
+						$this->getFieldName($index, 'width'),
+						_('Button width (%)'),
+						10,
+						100
+					))->setDefault(100)
+				)
+				->addField(
 					(new CWidgetFieldTextArea($this->getFieldName($index, 'manualinput'), _('Manual input')))
 						->setDefault('')
 				);
 		}
 
-		return $this->addField(
-			(new CWidgetFieldCheckBox('show_details', _('Show host and script details')))->setDefault(0)
-		);
+		return $this
+			->addField(
+				(new CWidgetFieldSelect('layout_columns', _('Columns'), [
+					1 => '1',
+					2 => '2',
+					3 => '3',
+					4 => '4',
+					5 => '5',
+					6 => '6'
+				]))->setDefault(2)
+			)
+			->addField(
+				(new CWidgetFieldSelect('button_alignment', _('Button alignment'), [
+					0 => _('Left'),
+					1 => _('Center'),
+					2 => _('Right')
+				]))->setDefault(1)
+			)
+			->addField(
+				(new CWidgetFieldSelect('layout_spacing', _('Spacing'), [
+					0 => _('Compact'),
+					1 => _('Normal'),
+					2 => _('Relaxed')
+				]))->setDefault(1)
+			)
+			->addField(
+				(new CWidgetFieldCheckBox('show_details', _('Show host and script details')))->setDefault(0)
+			);
 	}
 
 	private function getFieldName(int $index, string $field): string {

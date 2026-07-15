@@ -12,6 +12,9 @@ class WidgetView extends CControllerDashboardWidgetView {
 	protected function doAction(): void {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
 		$show_details = (int) ($this->fields_values['show_details'] ?? 0) === 1;
+		$layout_columns = max(1, min(6, (int) ($this->fields_values['layout_columns'] ?? 2)));
+		$button_alignment = max(0, min(2, (int) ($this->fields_values['button_alignment'] ?? 1)));
+		$layout_spacing = max(0, min(2, (int) ($this->fields_values['layout_spacing'] ?? 1)));
 		$hostname = _('Unknown host');
 
 		if ($hostid !== null) {
@@ -65,6 +68,9 @@ class WidgetView extends CControllerDashboardWidgetView {
 				'script_name' => $script['name'],
 				'label' => $label,
 				'color' => $this->fields_values[$this->getFieldName($index, 'color')] ?? '0275B8',
+				'width' => max(10, min(100,
+					(int) ($this->fields_values[$this->getFieldName($index, 'width')] ?? 100)
+				)),
 				'manualinput' => $this->fields_values[$this->getFieldName($index, 'manualinput')] ?? '',
 				'manualinput_enabled' => (int) $script['manualinput'] === 1,
 				'confirmation' => $script['confirmation'] ?? ''
@@ -76,6 +82,9 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'hostid' => $hostid,
 			'hostname' => $hostname,
 			'commands' => $commands,
+			'layout_columns' => $layout_columns,
+			'button_alignment' => $button_alignment,
+			'layout_spacing' => $layout_spacing,
 			'show_details' => $show_details,
 			'user' => ['debug_mode' => $this->getDebugMode()]
 		]));

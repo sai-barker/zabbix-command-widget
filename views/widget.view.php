@@ -21,6 +21,8 @@ $get_button_colors = static function(string $color): array {
 };
 
 $content = (new CDiv())->addClass('zcw-content');
+$alignment_classes = ['zcw-align-left', 'zcw-align-center', 'zcw-align-right'];
+$spacing_classes = ['zcw-spacing-compact', 'zcw-spacing-normal', 'zcw-spacing-relaxed'];
 
 if ($data['show_details']) {
 	$details = [new CDiv('Host: '.$data['hostname'])];
@@ -53,12 +55,20 @@ foreach ($data['commands'] as $command) {
 		->setAttribute('aria-live', 'polite');
 
 	$command_items[] = (new CDiv([
-		(new CDiv($button))->addClass('zcw-actions'),
+		(new CDiv($button))
+			->addClass('zcw-actions')
+			->addClass($alignment_classes[$data['button_alignment']])
+			->addStyle('--zcw-button-width: '.$command['width'].'%;'),
 		$result
 	]))->addClass('zcw-command');
 }
 
-$content->addItem((new CDiv($command_items))->addClass('zcw-command-list'));
+$content->addItem(
+	(new CDiv($command_items))
+		->addClass('zcw-command-list')
+		->addClass($spacing_classes[$data['layout_spacing']])
+		->addStyle('--zcw-columns: '.$data['layout_columns'].';')
+);
 
 (new CWidgetView($data))
 	->addItem($content)
