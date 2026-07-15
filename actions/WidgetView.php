@@ -12,6 +12,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 		$hostid = $this->fields_values['hostid'][0] ?? null;
 		$scriptid = $this->fields_values['command_scriptid'] ?? null;
 		$button_label = trim($this->fields_values['command_label'] ?? '');
+		$button_color = $this->fields_values['command_color'] ?? '0275B8';
 		$manualinput = $this->fields_values['command_manualinput'] ?? '';
 		$show_details = (int) ($this->fields_values['show_details'] ?? 0) === 1;
 
@@ -59,6 +60,7 @@ class WidgetView extends CControllerDashboardWidgetView {
 			'scriptid' => $scriptid,
 			'script_name' => $script_name,
 			'button_label' => $button_label,
+			'button_color' => $button_color,
 			'manualinput' => $manualinput,
 			'manualinput_enabled' => $manualinput_enabled,
 			'confirmation' => $confirmation,

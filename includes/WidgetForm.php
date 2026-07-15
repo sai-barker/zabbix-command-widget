@@ -11,6 +11,7 @@ use Zabbix\Widgets\{
 
 use Zabbix\Widgets\Fields\{
 	CWidgetFieldCheckBox,
+	CWidgetFieldColor,
 	CWidgetFieldMultiSelectHost,
 	CWidgetFieldSelect,
 	CWidgetFieldTextArea,
@@ -60,6 +61,10 @@ class WidgetForm extends CWidgetForm {
 			->addField(
 				(new CWidgetFieldTextBox('command_label', _('Button label')))
 					->setDefault(_('Execute'))
+			)
+			->addField(
+				(new CWidgetFieldColor('command_color', _('Button color')))
+					->setDefault('0275B8')
 			)
 			->addField(
 				(new CWidgetFieldTextArea('command_manualinput', _('Manual input')))

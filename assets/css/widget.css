@@ -22,6 +22,21 @@
 	min-width: 140px;
 }
 
+.zcw-command-button,
+.zcw-command-button:hover,
+.zcw-command-button:focus {
+	background-color: var(--zcw-button-color);
+	border-color: var(--zcw-button-color);
+	color: var(--zcw-button-text-color);
+}
+
+.zcw-command-button:disabled {
+	background-color: var(--zcw-button-color);
+	border-color: var(--zcw-button-color);
+	color: var(--zcw-button-text-color);
+	opacity: 0.65;
+}
+
 .zcw-result {
 	border: 1px solid transparent;
 	border-radius: 3px;
